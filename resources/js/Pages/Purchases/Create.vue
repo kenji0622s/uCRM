@@ -6,7 +6,7 @@ import { getToday } from '@/common'
 import MicroModal from '@/Components/MicroModal.vue'
 
 const props = defineProps({
-    'customers': Array,
+    // 'customers': Array,
     'items': Array
 })
 
@@ -89,18 +89,17 @@ const setCustomerId = id => {
                                                 </div>
                                             </div>
                                             
-                                            <MicroModal />
                                             <div class="p-2 w-full">
                                                 <div class="relative">
                                                     <label for="customer"
-                                                        class="leading-7 text-sm text-gray-600">会員名</label>
+                                                    class="leading-7 text-sm text-gray-600">会員名</label>
                                                     <!-- <select name="customer" v-model="form.customer_id">
                                                         <option v-for="customer in customers" :value="customer.id"
                                                             :key="customer.id">
                                                         {{ customer.id }}:{{ customer.name }}
                                                         </option>
                                                     </select> -->
-                                                    <!-- <MicroModal @update:customerId="setCustomerId" /> -->
+                                                    <MicroModal @update:customerId="setCustomerId" />
                                                 </div>
                                             </div>
 
