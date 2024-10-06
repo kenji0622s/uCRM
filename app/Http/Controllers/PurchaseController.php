@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Purchase;
 use App\Models\Customer;
 use App\Models\Item;
+use App\Models\Order;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,17 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        //
+        // dd(Order::paginate(50));
+
+        $orders = Order::groupBy('id')
+            ->selectRaw('id, sum(subtotal) as total, customer_name, status, created_at')
+            ->paginate(50);
+
+        // dd($orders);
+
+        return Inertia::render('Purchases/Index', [
+            'orders' => $orders
+        ]);
     }
 
     /**
@@ -50,24 +61,23 @@ class PurchaseController extends Controller
     {
         DB::beginTransaction();
 
-        try{
+        try {
             $purchase = Purchase::create([
                 'customer_id' => $request->customer_id,
                 'status' => $request->status
             ]);
-    
-            foreach($request->items as $item){
+
+            foreach ($request->items as $item) {
                 $purchase->items()->attach($purchase->id, [
                     'item_id' => $item['id'],
                     'quantity' => $item['quantity']
                 ]);
             }
-    
+
             DB::commit();
 
             return to_route('dashboard');
-    
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
         }
     }
